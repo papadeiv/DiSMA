@@ -1,3 +1,9 @@
+%{
+******************************************************************************************************
+                                      MIXED NEUMANN-DIRICHLET BCs
+******************************************************************************************************
+%}
+
 % prepare the simulation
 clear all
 close all
@@ -69,7 +75,7 @@ global inputs;
 inputs = [1 1 0 7];
 
 % define number of iterations for convergence (mesh refinement)
-Ns = 5;
+Ns = 7;
 
 % launch the simulation
 main(Ns);
