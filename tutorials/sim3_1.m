@@ -1,19 +1,14 @@
-%{
-******************************************************************************************************
-                                      MIXED NEUMANN-DIRICHLET BCs
-******************************************************************************************************
-%}
 
 % prepare the simulation
 clear all
 close all
 clc
 
-% including the triangulator library and solver library functions according to the choice of the subspace
-addpath('bbtr30')
+% include the triangulator and solver library functions
+addpath('../FEM2D')
+disp('FEM2D added to the path')
+addpath('../FEM2D/bbtr30')
 disp('bbtr30 added to the path')
-addpath('P1elements')
-disp(fprintf('P1 basis functions selected \n P1elements added to the path'));
 
 % define coefficient functions of the PDE
 global coefficient_functions;
@@ -61,8 +56,8 @@ clear v1 v2 v3 v4;
 % imposition of the BCs markers on each boundary of the domain
 % BY CONVENTION: odd markers are for Dirichlet BCs while even markers are for Neumann BCs
 b1 = 1;
-b2 = 2;
-b3 = 4;
+b2 = 3;
+b3 = 5;
 b4 = 7;
 
 global boundaries;
@@ -72,10 +67,13 @@ clear b1 b2 b3 b4;
 % imposition of the BCs markers on each input vertex of the domain
 % BY CONVENTION: odd markers are for Dirichlet BCs while even markers are for Neumann BCs
 global inputs;
-inputs = [1 1 0 7];
+inputs = boundaries;
+
+% define basis functions subspaces in string array
+subspace = ["P1", "P2"];
 
 % define number of iterations for convergence (mesh refinement)
 Ns = 7;
 
 % launch the simulation
-main(Ns);
+main(Ns, subspace(1));

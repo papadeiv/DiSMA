@@ -1,4 +1,6 @@
-function u_h = expand(u, nodes, N)
+function u_h = expand(u, N)
+
+    global nodes;
     % check if there are error in the vectors' dimensions
     if length(nodes()) ~= N
         error('Total number of nodes (N) is different from the number of elements in the expanded list (nodes(:,1))');
@@ -18,7 +20,7 @@ function u_h = expand(u, nodes, N)
         else
             % convert the Dirichlet pivot into natural integer
             J = -J;
-            marker = nodes(j,5);
+            marker = nodes(j,2);
             if marker == 0
                error('One DOF has been wrongfully stored as a boundary node');
             end

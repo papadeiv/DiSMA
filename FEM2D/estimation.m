@@ -1,5 +1,7 @@
-function [u,e_inf,e_L2,e_H1] = estimation(u_h,nodes,triangles,N)
+function [u,e_inf,e_L2,e_H1] = estimation(u_h, N)
 
+    global triangles;
+    global nodes;
     % import exact solution and gradient
     global exact_functions;
     % define analytical solution vector

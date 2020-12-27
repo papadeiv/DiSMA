@@ -1,7 +1,8 @@
-function [] = mesh(ref_area)
+function [] = mesh(ref_area, subspace)
 
     % import global parameters needed for domain construction
     global vertices;
+    global Ndof;
     global boundaries;
     global inputs;
 
@@ -28,7 +29,7 @@ function [] = mesh(ref_area)
     % --------------------------------------------------
 
     % numerical (constant) values of BCs (useless since BCs are set in expand function)
-    BC.Values = [1.0 0.0 exp(-1) 0.0 exp(-2) 0.0 exp(-1) 0.0];
+    BC.Values = [0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0];
 
     % assign BCs markers to borders
     BC.Boundary.Values = boundaries;
@@ -92,6 +93,17 @@ function [] = mesh(ref_area)
 
     [X,I] = sort(geom.pivot.Di(:,1));
     geom.pivot.Di = geom.pivot.Di(I,:);
+    
+    if subspace == 'P2'
+        
+        P2;
+        Ndof = 6;
+        
+    else
+        
+        Ndof = 3;
+        
+    end
 
     clear X I;
     
