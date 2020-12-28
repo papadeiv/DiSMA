@@ -20,7 +20,7 @@ function [h_max, A_max, Nt] = discretize(idx, subspace)
     end
 
     if Ndof==6
-        borders = zeros(size(geom.pivot.Ne,1),6);
+        borders = zeros(size(geom.pivot.Ne,1),7);
         counter = 0;
         for b = 1:geom.nelements.nBorders
             % check if it is a border of Neumann's boundary
@@ -37,6 +37,12 @@ function [h_max, A_max, Nt] = discretize(idx, subspace)
                 % fill-in border's BC marker
                 idx = find(b==geom.pivot.Ne(:,1));
                 borders(counter, 6) = find(geom.input.BC.Boundary.Values==geom.pivot.Ne(idx,2));
+                % fill in the parent triangle for the boundary border
+                if geom.elements.borders(borders(counter, 1),3) > 0
+                    borders(counter, 7) = geom.elements.borders(borders(counter, 1), 3);
+                else
+                    borders(counter, 7) = geom.elements.borders(borders(counter, 1), 4);
+                end
             end
             % save the borders' length
             L(b)=sqrt((geom.elements.coordinates(geom.elements.borders(b,1),1)-geom.elements.coordinates(geom.elements.borders(b,2),1))^2+(geom.elements.coordinates(geom.elements.borders(b,1),2)-geom.elements.coordinates(geom.elements.borders(b,2),2))^2);     

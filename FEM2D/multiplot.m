@@ -31,12 +31,12 @@ function [] = multiplot(Ns, m, z_h, z)
     xlabel('x')
     ylabel('y')
     
-    if m == Ns
-        for idx = 0:m-1
-            figure(1)
-            subplot(2,(Ns+1)/2,idx+1);
-            trisurf(grid, x, y, z, 'FaceAlpha', 0.1, 'EdgeColor', 'k', 'LineStyle', '--');
-            colormap(summer);
-        end
-    end
+%     if m == Ns
+%         for idx = 0:m-1
+%             figure(1)
+%             subplot(2,(Ns+1)/2,idx+1);
+%             trisurf(grid, x, y, z, 'FaceAlpha', 0.1, 'EdgeColor', 'k', 'LineStyle', '--');
+%             colormap(summer);
+%         end
+%     end
 end

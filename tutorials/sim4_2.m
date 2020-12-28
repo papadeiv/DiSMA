@@ -73,7 +73,7 @@ inputs = [1 1 0 7];
 subspace = ["P1", "P2"];
 
 % define number of iterations for convergence (mesh refinement)
-Ns = 7;
+Ns = 3;
 
 % launch the simulation
 main(Ns, subspace(2));

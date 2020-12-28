@@ -101,14 +101,14 @@ We consider a generic scalar function $u(\mathbf{x},t)$ as the unknown solution 
 \begin{equation*}
     \begin{cases}
         \partial_t u- \nabla\cdot(\nu(\mathbf{x},t)\nabla u) + \nabla\cdot(\boldsymbol{\beta}(\mathbf{x},t)u) + \sigma(\mathbf{x},t)u = f(\mathbf{x},t)\;,\quad \forall\mathbf{x}\in\Omega\;,\quad\forall t\in[0,T] \\
-        u(\mathbf{x},t) = (g_D(\mathbf{x},t))\;\quad\forall\mathbf{x}\in\Gamma_D \\
-        \partial_{\mathbf{\hat{n}}}u := \nabla u(\mathbf{x},t)\cdot\mathbf{\hat{n}} = g_N(\mathbf{x},t))\;,\quad\forall\mathbf{x}\in\Gamma_N\\
+        u(\mathbf{x},t) = g_D(\mathbf{x},t)\;\quad\forall\mathbf{x}\in\Gamma_D \\
+        \partial_{\mathbf{\hat{n}}}u := \nabla u\cdot\mathbf{\hat{n}} = g_N(\mathbf{x},t)\;,\quad\forall\mathbf{x}\in\Gamma_N\\
         u(\mathbf{x},0) = u_0(\mathbf{x})\;,\quad\forall\mathbf{x}\in\Omega
     \end{cases}\,,
 \end{equation*}
 where $\nu(\mathbf{x},t)\,,\;\boldsymbol{\beta}(\mathbf{x},t)\,,$ and $\sigma(\mathbf{x},t)$ quantify the relative magnitude of the diffusive, convective and reactive phenomena respectively whereas $f(\mathbf{x},t)$ models the source term function. We denote $\Gamma_D$ and $\Gamma_N$ as the mutually disjoint $(\Gamma_D\cap\Gamma_N = \emptyset)$ portions of the boundary $\partial\Omega$ of the spatial domain over which we set Dirichlet $(g_D(\mathbf{x},t))$ and Neumann $(g_N(\mathbf{x},t))$ boundary conditions (BCs) respectively.
 \subsection{Input file}
-The structure of DiSMA is s.t. all the information necessary from the user for it to discretise and solve the model equations are passed via a single script called by default \code{Inputs.m} but it can be renamed according to the user preference. One recommended practice for naming the file according to the simulations one is performing; for example if the users wants to run a series of simulations based on the same model but with different parameters then he/she can copy the file as many times as necessary and rename each one in accordance with the modifications made to the parameter functions.
+The structure of DiSMA is s.t. all the information necessary from the user for it to discretise and solve the desired model are passed via a single script called by default \code{inputs.m} but it can be renamed according to the user preference. One recommended practice is naming the file according to the simulation one is performing; for example if the users wants to run a series of simulations based on the same model but with different parameters then he/she can copy the file as many times as necessary and rename each one in accordance with the modifications made to the parameter functions.
 \newline
 The information that the user is required to specify are divided in \textbf{explicit} (the user must provide the information by hand) and \textbf{implicit} (the user can select the desired setting among a set of pre-existing selections). The former inputs are:
 \begin{itemize}
@@ -140,13 +140,13 @@ Since the presence of advective and reactive phenomena directly contirbute to th
 
 \newpage
 \subsubsection{$2-$dimensional setting}
-We want our solution to be a multivariate normal distribution $e^{\:\frac{1}{2}\mathbf{x}^T\mathbf{x}}$ with the unitary square in the first quadrant of the $x-y$ plane as spatial domain, i.e. $\Omega = [0,1]\times[0,1]$. In order to achieve the desired result we must, given a certain function $\nu(\mathbf{x},t)$ calculate the correct source and boundary functions.
+We want our solution to be a multivariate normal distribution $e^{\:\mathbf{x}^T\mathbf{x}}=e^{\,-(x^2+y^2)}$ with the unitary square in the first quadrant of the $x-y$ plane as spatial domain, i.e. $\Omega = [0,1]\times[0,1]$. In order to achieve the desired result we must, given a certain function $\nu(\mathbf{x},t)$ calculate the correct source and boundary functions.
 \newline The calculation of the source function we start by computing the spatial partial derivatives of the desired solution and then plug both $\nabla u$ and $u$ in the model equation
 \begin{equation*}
-    \nabla u = (\partial_xu, \partial_y u)^T = (-2x\,e^{\:(-x^2 - y^2)}, -2y\,e^{\:(-x^2 - y^2)})^T = -2u\begin{pmatrix} x \\ y \end{pmatrix}
+    \nabla u = (\partial_xu, \partial_y u)^T = (-2x\,e^{\,-(x^2 + y^2)}, -2y\,e^{\,-(x^2 + y^2)})^T = - 2u\begin{pmatrix} x \\ y \end{pmatrix} = -2u\,\mathbf{x}
 \end{equation*}
 \begin{equation}\label{eq1}
-    f(\mathbf{x},t) = -\nabla\cdot(\nu\nabla u) = -\nabla\nu\cdot\nabla u - \nu\Delta u = 2u\,(\nabla\nu)^T\begin{pmatrix} x \\ y \end{pmatrix}-\nu\Delta u\,,
+    f(\mathbf{x},t) = -\nabla\cdot(\nu\nabla u) = -\nabla\nu\cdot\nabla u - \nu\Delta u = 2u\,\nabla\nu\cdot\mathbf{x}-\nu\Delta u\,,
 \end{equation}
 and complete the calculation according to $\nu(\mathbf{x},t)$.
 \newline The computation for the Dirichlet and Neumann boundary functions is less straightforward and we will refer to the graphical representation of the domain and the analytic function itself. Let's start by considering the Neumann boundary functions as they are somewhat less complicated to derive in a general fashion; as in Figure \ref{geomSquare}, the computational domain of our test case features 4 normal vectors (one for each edge of the domain) which are
@@ -155,12 +155,19 @@ and complete the calculation according to $\nu(\mathbf{x},t)$.
 \end{equation*}
 To compute the Neumann functions associated to any given edge of the boundary we simply compute the dot product between the gradient of the analytical solution (which we already have following the calculation of the source function) and the normal vector of the edge on which the Neumann BC has been assigned. By putting in notation $N_j\,,\;j=1,2,3,4$ s.t. uniquely $g_{N_{j}}(\mathbf{x},t)$ defines the Neumann function associated to the $j^{\text{th}}$ edge of $\partial\Omega$, then we have
 \begin{equation*}
-    g_{N_{1}} = 2y\,e^{\:\frac{1}{2}\mathbf{x}^T\mathbf{x}} = 2y\,u(\mathbf{x},t)\,,\quad
+    g_{N_{1}} = 2y\,e^{\,\mathbf{x}^T\mathbf{x}} = 2y\,u(\mathbf{x},t)\,,\quad
     g_{N_{2}} = -2x\,u\,,\quad
     g_{N_{3}} = -2y\,u\,,\quad
     g_{N_{4}} = 2x\,u\,.
 \end{equation*}
-For the calculation of the Dirichlet functions we must what values the analytical solution has along those edges where it is assigned; this is trivial for a function that goes uniformly quickly to zero (i.e. it features  compact support). For the case of our multivariate distribution the process is more complex. In general one must compute the projection of the function onto the lower dimensional plane perpendicular to the flat surface domain with which it intersect along the desired edge. The $4$ planes are depicted in Figure \ref{geomSolPlanes} alongside the multivariate analytical solution and its projection onto the planes themselves. As a last remark we notice that only the source function in $(\ref{eq1})$ depends explicitly on the parametric definition of the model equation and will thus be the main discrimination among the simulations of the test cases we will perform in the following section.
+For the calculation of the Dirichlet functions we must what values the analytical solution has along those edges where it is assigned; this is trivial for a function that goes uniformly quickly to zero (i.e. it features  compact support). For the case of our multivariate distribution the process is more complex. In general one must compute the projection of the function onto the lower dimensional plane perpendicular to the flat surface domain with which it intersect along the desired edge. The $4$ planes are depicted in Figure \ref{geomSolPlanes} alongside the multivariate analytical solution and its projection onto the planes themselves. By using the same notation for the edges of $\partial\Omega$, the $4$ Dirichlet boundary function are 
+\begin{equation*}
+    g_{D_{1}} = e^{\,-x^2}\,,\quad
+    g_{D_{2}} = e^{\,-(y^2+1)}\,,\quad
+    g_{D_{3}} = e^{\,-(x^2+1)}\,,\quad
+    g_{D_{4}} = e^{\,-y^2}\,.
+\end{equation*}
+As a last remark we notice that only the source function in $(\ref{eq1})$ depends explicitly on the parametric definition of the model equation and will thus be the main discrimination among the simulations of the test cases we will perform in the following section.
 \newpage
 \begin{figure}[H]
     \centering
