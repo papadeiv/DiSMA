@@ -29,7 +29,7 @@ function [] = mesh(ref_area, subspace)
     % --------------------------------------------------
 
     % numerical (constant) values of BCs (useless since BCs are set in expand function)
-    BC.Values = [0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0];
+    BC.Values = [0.0 12.0 0.0 14.0 0.0 16.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0];
 
     % assign BCs markers to borders
     BC.Boundary.Values = boundaries;

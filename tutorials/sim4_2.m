@@ -1,7 +1,6 @@
 
 % prepare the simulation
 clear all
-close all
 clc
 
 % include the triangulator and solver library functions
@@ -58,7 +57,7 @@ clear v1 v2 v3 v4;
 b1 = 1;
 b2 = 2;
 b3 = 4;
-b4 = 7;
+b4 = 3;
 
 global boundaries;
 boundaries = [b1 b2 b3 b4];
@@ -67,13 +66,16 @@ clear b1 b2 b3 b4;
 % imposition of the BCs markers on each input vertex of the domain
 % BY CONVENTION: odd markers are for Dirichlet BCs while even markers are for Neumann BCs
 global inputs;
-inputs = [1 1 0 7];
+inputs = [5 7 0 9];
 
 % define basis functions subspaces in string array
 subspace = ["P1", "P2"];
 
-% define number of iterations for convergence (mesh refinement)
-Ns = 3;
+% define choices for grid-convergent simulations
+grid_convergence = ["N", "Y"];
+
+% define choices for levels of increasing grid density [0 -> very coarse mesh; 9 -> very refined mesh]
+Ns = [0, 1, 3, 5, 7, 9];
 
 % launch the simulation
-main(Ns, subspace(2));
+main(grid_convergence(1), Ns(5), subspace(2));

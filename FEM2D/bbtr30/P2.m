@@ -40,7 +40,7 @@ for l=1:geom.nelements.nBorders
 
   VertexValue=[0 0];
   Vertex=[0 0];
-  D= [0 0];
+  D = [0 0];
   
   idxV = 1:length(geom.input.BC.InputVertexValues); %indice dei vertici
 
@@ -90,10 +90,10 @@ for l=1:geom.nelements.nBorders
                   % iniziale:
 
                   % l'indice del lato e` quello del nodo di inizio di quel lato
-                  if( max(Vertex)-min(Vertex)>1 ) % siamo sul lato di chiusura
-                    Di = find(geom.input.BC.Boundary.Values==max(Vertex));
+                  if(max(Vertex)-min(Vertex)>1 ) % siamo sul lato di chiusura
+                    Di = geom.input.BC.Boundary.Values(max(Vertex));%find(geom.input.BC.Boundary.Values==max(Vertex));
                   else % siamo sui lati 1->2->3->4->
-                    Di = find(geom.input.BC.Boundary.Values==min(Vertex));
+                    Di = geom.input.BC.Boundary.Values(min(Vertex));%find(geom.input.BC.Boundary.Values==min(Vertex));
                   end
                   % check della condizione di Neumann aperta
                   if(rem(Di,2)== 0) 
