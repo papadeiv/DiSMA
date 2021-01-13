@@ -68,14 +68,17 @@ clear b1 b2 b3 b4;
 global inputs;
 inputs = [9 11 13 15];
 
-% define basis functions subspaces in string array
-subspace = ["P1", "P2"];
+% define choices for time-dependence in string array
+time = ["N", "Y"];
 
-% define choices for grid-convergent simulations
+% define choices for grid-convergent simulations in string array
 grid_convergence = ["N", "Y"];
+
+% define choices for basis functions subspaces in string array
+subspace = ["P1", "P2"];
 
 % define choices for levels of increasing grid density [0 -> very coarse mesh; 9 -> very refined mesh]
 Ns = [0, 1, 3, 5, 7, 9];
 
 % launch the simulation
-main(grid_convergence(1), Ns(5), subspace(2));
+main(time(1), grid_convergence(1), subspace(2), Ns(5));

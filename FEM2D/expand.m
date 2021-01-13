@@ -1,5 +1,6 @@
 function u_h = expand(u, N)
 
+    global t;
     global nodes;
     % check if there are error in the vectors' dimensions
     if length(nodes()) ~= N
@@ -24,7 +25,7 @@ function u_h = expand(u, N)
             if marker == 0
                error('One DOF has been wrongfully stored as a boundary node');
             end
-            u_h(j) = boundary_functions{1, marker}(nodes(j,3), nodes(j,4));
+            u_h(j) = boundary_functions{1, marker}(nodes(j,3), nodes(j,4),t);
         end
     end
     

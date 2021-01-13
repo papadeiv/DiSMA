@@ -1,9 +1,11 @@
-function [d_x,d_y] = delta(nodes, triangle)
-
+function [d_x,d_y] = delta(idx)
+    
+    global nodes;
+    global triangles;
     % assign the e-th triangle's local vertices coordinates to v1,v2,v3
-    v1 = nodes(triangle(1),3:4);
-    v2 = nodes(triangle(2),3:4);
-    v3 = nodes(triangle(3),3:4);
+    v1 = nodes(triangles(idx,1),3:4);
+    v2 = nodes(triangles(idx,2),3:4);
+    v3 = nodes(triangles(idx,3),3:4);
 
     x = [v1(1) v2(1) v3(1)];
     y = [v1(2) v2(2) v3(2)];

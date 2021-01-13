@@ -5,10 +5,11 @@ function u = solve(A, f)
     % initialise the (temporary) solution vector
     Nh = length(f);
     u = zeros(Nh);
-    if Nh < 1e7
+    if Nh < 1e6
         % solving the linear system DIRECTLY
         u = A\f;
     else
+        disp('\n**** Using iterative methods for the solution of the linear system ****\n');
         % solving the linear system ITERATIVELY
         if issymmetric(A)==1
             % using conjugate gradient descent method (A is symmetric)

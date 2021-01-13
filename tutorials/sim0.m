@@ -19,27 +19,27 @@ coefficient_functions = {
 % define analytical solution and its derivatives
 global exact_functions;
 exact_functions = {
-    @(x,y) exp(-x^2 - y^2);...          % exact solution (U)
-    @(x,y) -2*x*exp(-x^2 - y^2);...     % x-partial derivative (U_x)};
-    @(x,y) -2*y*exp(-x^2 - y^2)};       % y-partial derivative (U_y)};
+    @(x,y) 16*x*(1-x)*y*(1-y);...     % exact solution (U)
+    @(x,y) 16*(2*x-1)*(y-1)*y;...     % x-partial derivative (U_x)};
+    @(x,y) 16*(2*y-1)*(x-1)*x};       % y-partial derivative (U_y)};
 
 % define source function
 global source_function;
-source_function = @(x,y) -coefficient_functions{1}(x,y)*4*(x^2 + y^2 -1)*exact_functions{1}(x,y);
+source_function = @(x,y) 32*(x*(1-x) + y*(1-y));
 
 % construct boundary functions cell array
 global boundary_functions;
 boundary_functions = {
     % first row -> Dirichlet BCs
-    @(x,y) exp(-x^2),...      % border 1
-    @(x,y) exp(-(y^2+1)),...  % border 2
-    @(x,y) exp(-(x^2+1)),...  % border 3
-    @(x,y) exp(-y^2);         % border 4
+    @(x,y) 0.0,...      % border 1
+    @(x,y) 0.0,...      % border 2
+    @(x,y) 0.0,...      % border 3
+    @(x,y) 0.0;         % border 4
     % second row -> Neumann BCs
-    @(x,y) 2*y*exact_functions{1}(x,y),...              % border 1
-    @(x,y) -2*x*exact_functions{1}(x,y),...             % border 2
-    @(x,y) -2*y*exact_functions{1}(x,y),...             % border 3
-    @(x,y) 2*x*exact_functions{1}(x,y)};                % border 4
+    @(x,y) 0.0,...      % border 1
+    @(x,y) 0.0,...      % border 2
+    @(x,y) 0.0,...      % border 3
+    @(x,y) 0.0};        % border 4
 
 % define computational domain 
 % BY CONVENTION: border 1 goes from first node (v1) to second node (v2); border 2 goes from (v2) to (v3); border 3 from (v3) to (v4) and so on
@@ -55,9 +55,9 @@ clear v1 v2 v3 v4;
 % imposition of the BCs markers on each boundary of the domain
 % BY CONVENTION: odd markers are for Dirichlet BCs while even markers are for Neumann BCs
 b1 = 1;
-b2 = 2;
-b3 = 4;
-b4 = 3;
+b2 = 3;
+b3 = 5;
+b4 = 7;
 
 global boundaries;
 boundaries = [b1 b2 b3 b4];
@@ -66,7 +66,7 @@ clear b1 b2 b3 b4;
 % imposition of the BCs markers on each input vertex of the domain
 % BY CONVENTION: odd markers are for Dirichlet BCs while even markers are for Neumann BCs
 global inputs;
-inputs = [5 7 0 9];
+inputs = [9 11 13 15];
 
 % define choices for time-dependence in string array
 time = ["N", "Y"];

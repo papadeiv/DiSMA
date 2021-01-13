@@ -9,7 +9,7 @@ function [] = multiplot(multi, Ns, m, z_h, z)
     y = nodes(:,4);
     grid = triangles(:,1:3);
     
-    colormap(hsv);
+    colormap(summer);
     
     if multi=='Y'
         % create subplot window for the iterate discrete solution
@@ -35,17 +35,18 @@ function [] = multiplot(multi, Ns, m, z_h, z)
         ylabel('y')
     else
         if Ndof == 6
-            scatter3(x,y,z_h,40,z_h,'MarkerFaceColor','flat','LineWidth',1.5,'MarkerEdgeColor','k')
+            trisurf(grid, x, y, z_h, 'LineWidth', 1.5);
+            draw_grid(geom,1)
+            %scatter3(x,y,z_h,40,z_h,'MarkerFaceColor','flat','LineWidth',1.5,'MarkerEdgeColor','k')
         else
             trisurf(grid, x, y, z_h, 'LineWidth', 1.5);
             draw_grid(geom,1)
         end
-        view(150,6)
+        view(45,0)
+        %view(150,6)
         xlabel('x')
         xlabel('x')
-        if Ns < 7
-            %trisurf(grid, x, y, z, 'FaceAlpha', 0.1, 'EdgeColor', 'k', 'LineStyle', '--');
-        end
+        %trisurf(grid, x, y, z, 'FaceAlpha', 0.1, 'EdgeColor', 'k', 'LineStyle', '--');
     end
     
 end
