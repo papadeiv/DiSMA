@@ -1,4 +1,4 @@
-function [A, Ad, f, gd] = P2solver(Nh, Nd)
+function P2solver(Nh, Nd)
     
     % import time-step
     global t;
@@ -8,9 +8,15 @@ function [A, Ad, f, gd] = P2solver(Nh, Nd)
     global triangles;
     global nodes;
     % initialise linear system
+    global M;
+    M = zeros(Nh, Nh);
+    global A;
     A = zeros(Nh, Nh);
+    global f;
     f = zeros(Nh, 1);
+    global Ad;
     Ad = zeros(Nh, Nd);
+    global gd;
     gd = zeros(Nd,1);
     % assemble the linear system
     for e=1:length(triangles(:,1))

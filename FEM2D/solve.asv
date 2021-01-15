@@ -1,25 +1,26 @@
-function u = solve()
+function u = solve(M, A, f, scheme, dt)
     
-    % import the assembled RHS and LHS terms 
-    global LHS;
-    global RHS;
+    % import variables of the linear system
+    global M;
+    global A
     % define accuracy and maximum number of iterations of the solving algorithms
     toll = 1e-9;
     iter = 1000;
     % initialise the (temporary) solution vector
-    Nh = length(RHS);
+    Nh = length(f);
+    u = zeros(Nh);
     if Nh < 1e6
         % solving the linear system DIRECTLY
-        u = LHS\RHS;
+        u = A\f;
     else
         disp('\n**** Using iterative methods for the solution of the linear system ****\n');
         % solving the linear system ITERATIVELY
-        if issymmetric(LHS)==1
+        if issymmetric(A)==1
             % using conjugate gradient descent method (A is symmetric)
-            u = pcg(LHS,RHS,toll,iter);
+            u = pcg(A,f,toll,iter);
         else
             % using minimum squares method (A is not symmetric)
-            u = gmres(LHS,RHS,[],toll,iter);
+            u = gmres(A,f,[],toll,iter);
         end
     end
     

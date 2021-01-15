@@ -57,7 +57,7 @@ function [] = main(time, multi, subspace, scheme, Ns)
         end
     else
         % print information on time-scheme
-        disp(sprintf(" Unsteady simulation selected: including time-dependent schemes \n ******** using %s scheme\n",scheme));
+        disp(sprintf("\n Unsteady simulation: "));
         % define the error vector for time-convergence order estimation
         E_t = zeros(10,1);
         % derive a discrete grid object on top of the continuos domain
@@ -75,7 +75,7 @@ function [] = main(time, multi, subspace, scheme, Ns)
             % compute number of time-steps at k-th iteration
             steps = 100 + k*30;
             % print informations at screen in runtime
-            disp(sprintf("\n\n Time-convergence iteration: %d\n Number of time-steps: %d ", k+1, steps));
+            disp(sprintf("\n Time-convergence iteration: %d\n Number of time-steps: %d ", k+1, steps));
             % compute the iteration steps to which the solution is printed
             print_iter = ceil(steps/10);
             % compute the time increment
@@ -99,7 +99,7 @@ function [] = main(time, multi, subspace, scheme, Ns)
                     %multiplot('N', Ns, Ns, u_h, u);
                 end
             end
-            newline;
+            disp(sprintf("\n"));
         end
     end
 end

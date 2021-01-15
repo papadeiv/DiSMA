@@ -1,18 +1,19 @@
-function [] = build(Nh, N)
+function [MA, f] = build(Nh, N)
 
-    % compute number of Dirichlet's nodes
     Nd = N - Nh;
     % import number of DOFs defined on each element (depending on the subspace of the basis functions)
     global Ndof;
     % assemble the linear terms according to the choice of the subspace
     if Ndof==3
-        P1solver(Nh, Nd);
+        [A, Ad, f, gd] = P1solver(Nh, Nd);
         % adding Neumann's borders nodes contribution to the source vector
-        P1Neumann();
+        f = P1Neumann(f);
     else
-        P2solver(Nh, Nd);
+        [A, Ad, f, gd] = P2solver(Nh, Nd);
         % adding Neumann's borders nodes contribution to the source vector
-        P2Neumann();
+        f = P2Neumann(f);
     end
+    % assemble the RHS of the linear system by including the border contribution
+    f = f-Ad*gd;
     
 end

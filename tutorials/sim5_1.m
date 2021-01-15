@@ -2,12 +2,21 @@
 % prepare the simulation
 clear all
 clc
+disp(sprintf("*******************************************\n****************** DiSMA ******************"));
+disp("Differential Solver for Matlab Applications");
+disp("********* an open-source project **********")
+disp(sprintf("*******************************************"));
+disp(sprintf("\n\n__________________________________________"))
+disp(sprintf("\n            SIMULATION STARTING"))
+disp(sprintf("__________________________________________"))
 
 % include the triangulator and solver library functions
+disp(sprintf("\n\n 2-dimensional simulation selected: adding FEM2D to path"));
 addpath('../FEM2D')
-disp('FEM2D added to the path')
+disp(sprintf(' ******** FEM2D added to the path'));
+disp(sprintf('\n Triangular elements selected: adding bbtr30 added to the path'));
 addpath('../FEM2D/bbtr30')
-disp('bbtr30 added to the path')
+disp(sprintf(' ******** bbtr30 added to the path\n\n'));
 
 % define coefficient functions of the PDE
 global coefficient_functions;
@@ -59,9 +68,9 @@ clear v1 v2 v3 v4;
 % imposition of the BCs markers on each boundary of the domain
 % BY CONVENTION: odd markers are for Dirichlet BCs while even markers are for Neumann BCs
 b1 = 1;
-b2 = 2;
-b3 = 4;
-b4 = 3;
+b2 = 3;
+b3 = 5;
+b4 = 7;
 
 global boundaries;
 boundaries = [b1 b2 b3 b4];
@@ -70,10 +79,13 @@ clear b1 b2 b3 b4;
 % imposition of the BCs markers on each input vertex of the domain
 % BY CONVENTION: odd markers are for Dirichlet BCs while even markers are for Neumann BCs
 global inputs;
-inputs = [5 7 0 9];
+inputs = [9 11 13 15];
 
 % define choices for time-dependence
 time = [0, pi/2];
+
+% define choices for time-discretisation schemes
+time_scheme = ["1st-order", "2nd-order"];
 
 % define choices for grid-convergent simulations in string array
 grid_convergence = ["N", "Y"];
@@ -85,4 +97,4 @@ subspace = ["P1", "P2"];
 Ns = [0, 1, 3, 5, 7, 9];
 
 % launch the simulation
-main(time(2), grid_convergence(1), subspace(1), Ns(5));
+main(time(2), grid_convergence(1), subspace(1), time_scheme(2),Ns(5));

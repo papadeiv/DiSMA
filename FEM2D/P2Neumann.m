@@ -1,7 +1,9 @@
-function f = P2Neumann(f)
+function P2Neumann()
     
     % import time-step
     global t;
+    % import variables of the linear system
+    global f;
     % import all the boundary functions on the borders of the domain
     global boundary_functions;
     % import geometric entities of the domain

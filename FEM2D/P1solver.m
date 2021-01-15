@@ -1,4 +1,4 @@
-function [A, Ad, f, gd] = P1solver(Nh, Nd)
+function P1solver(Nh, Nd)
     
     % import time-step
     global t;
@@ -9,10 +9,16 @@ function [A, Ad, f, gd] = P1solver(Nh, Nd)
     % import geometric entities of the domain
     global triangles;
     global nodes;
-    % initialise linear system
+    % initialise the linear system
+    global M;
+    M = zeros(Nh, Nh);
+    global A;
     A = zeros(Nh, Nh);
+    global f;
     f = zeros(Nh, 1);
+    global Ad;
     Ad = zeros(Nh, Nd);
+    global gd;
     gd = zeros(Nd,1);
     % assemble the linear system
     for e=1:length(triangles(:,1))
@@ -46,9 +52,9 @@ function [A, Ad, f, gd] = P1solver(Nh, Nd)
                         end
                         % compute the entry of Ad for the j_g-th trial basis function and the k_g-th test basis functions
                         Ad(j_g,k_g) = Ad(j_g,k_g) + ...
-                            coefficient_functions{1}(x_G,y_G,t)*(dy(k)*dy(j)+dx(k)*dx(j))/(4*area) + ...
-                            0 + ...
-                            0;
+                            coefficient_functions{1}(x_G,y_G,t)*(dy(k)*dy(j)+dx(k)*dx(j))/(4*area) + ... % diffusive term
+                            0 + ... % convective term
+                            0; % radiative term
                         % compute the boundary function value associated to the k_g node
                         gd(k_g) = boundary_functions{1, marker}(nodes(triangles(e,k),3), nodes(triangles(e,k),4),t);
                     end
