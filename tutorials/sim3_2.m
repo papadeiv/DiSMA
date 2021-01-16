@@ -2,44 +2,53 @@
 % prepare the simulation
 clear all
 clc
+disp(sprintf("*******************************************\n****************** DiSMA ******************"));
+disp("Differential Solver for Matlab Applications");
+disp("********* an open-source project **********")
+disp(sprintf("*******************************************"));
+disp(sprintf("\n\n __________________________________________"))
+disp(sprintf("\n            SIMULATION STARTING"))
+disp(sprintf(" __________________________________________"))
 
 % include the triangulator and solver library functions
+disp(sprintf("\n\n 2-dimensional simulation selected: adding FEM2D to path"));
 addpath('../FEM2D')
-disp('FEM2D added to the path')
+disp(sprintf(' ******** FEM2D added to the path'));
+disp(sprintf('\n Triangular elements selected: adding bbtr30 added to the path'));
 addpath('../FEM2D/bbtr30')
-disp('bbtr30 added to the path')
+disp(sprintf(' ******** bbtr30 added to the path\n\n'));
 
 % define coefficient functions of the PDE
 global coefficient_functions;
 coefficient_functions = {
-    @(x,y) 1.0;...  % diffusion function (nu)
-    @(x,y) 0.0;...  % convection function (beta)
-    @(x,y) 0.0};    % reaction function (sigma)
+    @(x,y,t) 1.0;...  % diffusion function (nu)
+    @(x,y,t) 0.0;...  % convection function (beta)
+    @(x,y,t) 0.0};    % reaction function (sigma)
 
 % define analytical solution and its derivatives
 global exact_functions;
 exact_functions = {
-    @(x,y) exp(-x^2 - y^2);...          % exact solution (U)
-    @(x,y) -2*x*exp(-x^2 - y^2);...     % x-partial derivative (U_x)};
-    @(x,y) -2*y*exp(-x^2 - y^2)};       % y-partial derivative (U_y)};
+    @(x,y,t) exp(-x^2 - y^2);...          % exact solution (U)
+    @(x,y,t) -2*x*exp(-x^2 - y^2);...     % x-partial derivative (U_x)};
+    @(x,y,t) -2*y*exp(-x^2 - y^2)};       % y-partial derivative (U_y)};
 
 % define source function
 global source_function;
-source_function = @(x,y) -coefficient_functions{1}(x,y)*4*(x^2 + y^2 -1)*exact_functions{1}(x,y);
+source_function = @(x,y,t) -coefficient_functions{1}(x,y,t)*4*(x^2 + y^2 -1)*exact_functions{1}(x,y,t);
 
 % construct boundary functions cell array
 global boundary_functions;
 boundary_functions = {
     % first row -> Dirichlet BCs
-    @(x,y) exp(-x^2),...      % border 1
-    @(x,y) exp(-(y^2+1)),...  % border 2
-    @(x,y) exp(-(x^2+1)),...  % border 3
-    @(x,y) exp(-y^2);         % border 4
+    @(x,y,t) exp(-x^2),...      % border 1
+    @(x,y,t) exp(-(y^2+1)),...  % border 2
+    @(x,y,t) exp(-(x^2+1)),...  % border 3
+    @(x,y,t) exp(-y^2);         % border 4
     % second row -> Neumann BCs
-    @(x,y) 2*y*exact_functions{1}(x,y),...              % border 1
-    @(x,y) -2*x*exact_functions{1}(x,y),...             % border 2
-    @(x,y) -2*y*exact_functions{1}(x,y),...             % border 3
-    @(x,y) 2*x*exact_functions{1}(x,y)};                % border 4
+    @(x,y,t) 2*y*exact_functions{1}(x,y),...              % border 1
+    @(x,y,t) -2*x*exact_functions{1}(x,y),...             % border 2
+    @(x,y,t) -2*y*exact_functions{1}(x,y),...             % border 3
+    @(x,y,t) 2*x*exact_functions{1}(x,y)};                % border 4
 
 % define computational domain 
 % BY CONVENTION: border 1 goes from first node (v1) to second node (v2); border 2 goes from (v2) to (v3); border 3 from (v3) to (v4) and so on
@@ -68,8 +77,11 @@ clear b1 b2 b3 b4;
 global inputs;
 inputs = [9 11 13 15];
 
-% define choices for time-dependence in string array
-time = ["N", "Y"];
+% define choices for time-dependence
+time = [0, pi/2];
+
+% define choices for time-discretisation schemes
+time_scheme = ["1st-order", "2nd-order"];
 
 % define choices for grid-convergent simulations in string array
 grid_convergence = ["N", "Y"];
@@ -81,4 +93,4 @@ subspace = ["P1", "P2"];
 Ns = [0, 1, 3, 5, 7, 9];
 
 % launch the simulation
-main(time(1), grid_convergence(1), subspace(2), Ns(5));
+main(time(1), grid_convergence(1), subspace(2), time_scheme(1), Ns(5));

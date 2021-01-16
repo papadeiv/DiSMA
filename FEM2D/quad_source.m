@@ -1,6 +1,5 @@
-function sum = quad_source(j)
+function sum = quad_source(j, timestep)
     
-    global t;
     global source_function;
     [phihat, grad_phihat] = basis();
     phi = phihat{j};
@@ -8,7 +7,7 @@ function sum = quad_source(j)
     Nq = length(xhat);
     sum = 0;
     for q=1:Nq
-        sum = sum + omega(q)*source_function(xhat(q),yhat(q),t)*phi(xhat(q),yhat(q));
+        sum = sum + omega(q)*source_function(xhat(q),yhat(q),timestep)*phi(xhat(q),yhat(q));
     end
     
 end

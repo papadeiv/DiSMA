@@ -1,9 +1,5 @@
-function P2Neumann()
+function f = P2Neumann(f, timestep)
     
-    % import time-step
-    global t;
-    % import variables of the linear system
-    global f;
     % import all the boundary functions on the borders of the domain
     global boundary_functions;
     % import geometric entities of the domain
@@ -30,24 +26,24 @@ function P2Neumann()
         y_e = nodes(Ve,4);
         
         % define the affine parametric map for the reference border
-        gamma_x = @(t) x_b + (x_e - x_b)*t;
-        gamma_y = @(t) y_b + (y_e - y_b)*t;
+        gamma_x = @(that) x_b + (x_e - x_b)*that;
+        gamma_y = @(that) y_b + (y_e - y_b)*that;
         
         % define the basis functions restriction on the vertices
         % BEGINNING EDGE VERTEX
-        phi_b = @(t) 2*t^2-3*t+1;
+        phi_b = @(that) 2*that^2-3*that+1;
         % MEDIUM EDGE VERTEX
-        phi_m = @(t) -4*t^2+4*t;
+        phi_m = @(that) -4*that^2+4*that;
         % ENDING EDGE VERTEX
-        phi_e = @(t) 2*t^2-t;
+        phi_e = @(that) 2*that^2-that;
         
         % evaluate teh Neumann function on the mapped coordinate of each vertex
         % BEGINNING EDGE VERTEX
-        g_b = boundary_functions{2, marker}(gamma_x(0), gamma_y(0), t);
+        g_b = boundary_functions{2, marker}(gamma_x(0), gamma_y(0), timestep);
         % MEDIUM EDGE VERTEX
-        g_m = boundary_functions{2, marker}(gamma_x(0.5), gamma_y(0.5), t);
+        g_m = boundary_functions{2, marker}(gamma_x(0.5), gamma_y(0.5), timestep);
         % ENDING EDGE VERTEX
-        g_e = boundary_functions{2, marker}(gamma_x(1), gamma_y(1), t);
+        g_e = boundary_functions{2, marker}(gamma_x(1), gamma_y(1), timestep);
         
         % compute the contribution of each node to the source vector with numerical quadrature
         % BEGINNING EDGE VERTEX

@@ -1,9 +1,5 @@
-function P1Neumann()
+function f = P1Neumann(f, timestep)
 
-    % import time-step
-    global t;
-    % import variables of the linear system
-    global f;
     % import all the boundary functions on the borders of the domain
     global boundary_functions;
     % import geometric entities of the domain
@@ -19,8 +15,8 @@ function P1Neumann()
         x_b = nodes(Vb,3);
         y_b = nodes(Vb,4);
         % evaluate the Neumann function on the vertices
-        g_e = boundary_functions{2, borders(b,5)}(x_e, y_e, t);
-        g_b = boundary_functions{2, borders(b,5)}(x_b, y_b, t);
+        g_e = boundary_functions{2, borders(b,5)}(x_e, y_e, timestep);
+        g_b = boundary_functions{2, borders(b,5)}(x_b, y_b, timestep);
         % add the contirbute
         if nodes(Vb,1)>0
             f(nodes(Vb,1)) = f(nodes(Vb,1)) + borders(b,4)*(g_b/3 + g_e/6);

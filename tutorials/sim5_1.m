@@ -82,7 +82,7 @@ global inputs;
 inputs = [9 11 13 15];
 
 % define choices for time-dependence
-time = [0, pi/2];
+time = [0, pi];
 
 % define choices for time-discretisation schemes
 time_scheme = ["1st-order", "2nd-order"];
@@ -97,4 +97,4 @@ subspace = ["P1", "P2"];
 Ns = [0, 1, 3, 5, 7, 9];
 
 % launch the simulation
-main(time(2), grid_convergence(1), subspace(1), time_scheme(2),Ns(5));
+main(time(2), grid_convergence(1), subspace(1), time_scheme(2), Ns(5));

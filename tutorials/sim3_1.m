@@ -18,7 +18,6 @@ disp(sprintf('\n Triangular elements selected: adding bbtr30 added to the path')
 addpath('../FEM2D/bbtr30')
 disp(sprintf(' ******** bbtr30 added to the path\n\n'));
 
-
 % define coefficient functions of the PDE
 global coefficient_functions;
 coefficient_functions = {
@@ -82,7 +81,7 @@ inputs = [9 11 13 15];
 time = [0, pi/2];
 
 % define choices for time-discretisation schemes
-time_scheme = ["1st-order implicit", "1st-order explicit", "2nd-order"];
+time_scheme = ["1st-order", "2nd-order"];
 
 % define choices for grid-convergent simulations in string array
 grid_convergence = ["N", "Y"];
@@ -94,4 +93,4 @@ subspace = ["P1", "P2"];
 Ns = [0, 1, 3, 5, 7, 9];
 
 % launch the simulation
-main(time(1), grid_convergence(2), subspace(1), time_scheme(1),Ns(5));
+main(time(1), grid_convergence(1), subspace(1), time_scheme(1), Ns(5));

@@ -27,7 +27,11 @@ function [] = main(time, multi, subspace, scheme, Ns)
         % iterations over the grid refinement
         for m=0:l-1
             % derive a discrete grid object on top of the continuos domain
-            [h(m+1),Ar(m+1),Nt] = discretize(m, subspace);
+            if multi=='Y'
+                [h(m+1),Ar(m+1),Nt] = discretize(m, subspace);
+            else
+                [h(m+1),Ar(m+1),Nt] = discretize(Ns, subspace);
+            end
             % extract the number of DOFs and BCs out of all the nodes
             [Ni,Nd,Nn] = reduce();
             % number of DOFs
@@ -41,7 +45,7 @@ function [] = main(time, multi, subspace, scheme, Ns)
             % build the linear system terms
             build(Nh(m+1), N);
             % assembling the linear system associated to the discrete grid
-            assemble(scheme,dt);
+            assemble(Nh, Nd, scheme,dt);
             % solving the linear system with ad-hoc algorithm
             u_tmp = solve();
             % reconstruct the whole solution by including the (known) values at the boundaries
@@ -49,13 +53,15 @@ function [] = main(time, multi, subspace, scheme, Ns)
             % estimate error (u_h-u) in different norms
             [u,E_inf(m+1),E_L2(m+1),E_H1(m+1)] = estimation(u_h, N);
             % plot the reconstructed (discrete) solution
-            multiplot(multi, Ns, m, u_h, u);
+            multiplot(time, multi, Ns, m, u_h, u);
         end
         if multi=='Y'
             % estimate and plot the errors for the grid convergence
             errors(h, Ar, Nh, E_inf, E_L2, E_H1);
         end
     else
+        % assign flag variable for dummy t
+        t = 1;
         % print information on time-scheme
         disp(sprintf(" Unsteady simulation selected: including time-dependent schemes \n ******** using %s scheme\n",scheme));
         % define the error vector for time-convergence order estimation
@@ -68,35 +74,42 @@ function [] = main(time, multi, subspace, scheme, Ns)
         Nh = Ni + Nn;
         % number of total nodes
         N = Nh + Nd;
+        % define and initialise the IC vector to be used also for time-step progression
+        global u_h_prev_t;
+        u_h_prev_t = zeros(Nh,1);
+        assignIC(N);
         % build the linear system terms
         build(Nh, N);
         % iterate over discretisation steps for time-convergence
-        for k=0:10
+        for k=0:0%10
             % compute number of time-steps at k-th iteration
             steps = 100 + k*30;
             % print informations at screen in runtime
             disp(sprintf("\n\n Time-convergence iteration: %d\n Number of time-steps: %d ", k+1, steps));
             % compute the iteration steps to which the solution is printed
-            print_iter = ceil(steps/10);
+            print_iter = ceil(steps/8);
+            print_counter = 0;
             % compute the time increment
             dt = time/steps;
             disp(sprintf("\n ******** Starting time-loop ******** \n"));
             % iterate over time-loop
             for iter=0:steps
-                % compute the t-th time-step
+                % compute the t-th time-step and update t
                 t = iter*dt;
                 disp(sprintf("    Time-step: %f", t));
                 % assembling the linear system associated to the discrete grid
-                assemble(scheme,dt);
+                assemble(Nh, Nd, scheme, dt);
                 % solving the linear system at t-th time-step
                 u_tmp = solve();
+                u_h_prev_t = u_tmp;
                 % reconstruct the whole solution by including the (known) values at the boundaries
                 u_h = expand(u_tmp, N);
                 % estimate error (u_h-u) in different norms
                 [u,e_inf,e_L2,e_H1] = estimation(u_h, N);
                 % plot solution only at certain iterations to not saturate memory
                 if rem(iter,print_iter) == 0
-                    %multiplot('N', Ns, Ns, u_h, u);
+                    print_counter = print_counter + 1;
+                    multiplot(time,'N', 8, print_counter, u_h, u);
                 end
             end
             newline;

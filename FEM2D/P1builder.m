@@ -1,4 +1,4 @@
-function P1solver(Nh, Nd)
+function P1builder(Nh, Nd)
     
     % import time-step
     global t;
@@ -10,8 +10,6 @@ function P1solver(Nh, Nd)
     global triangles;
     global nodes;
     % initialise the linear system
-    global M;
-    M = zeros(Nh, Nh);
     global A;
     A = zeros(Nh, Nh);
     global f;
@@ -39,9 +37,9 @@ function P1solver(Nh, Nd)
                     if nodes(triangles(e,k),1)>0
                         % compute the entry of A for the j_g-th trial basis function and the k_g-th test basis functions
                         A(j_g,k_g) = A(j_g,k_g) + ...
-                            coefficient_functions{1}(x_G,y_G,t)*(dy(k)*dy(j)+dx(k)*dx(j))/(4*area) + ...
-                            0 + ...
-                            0;
+                            coefficient_functions{1}(x_G,y_G,t)*(dy(k)*dy(j)+dx(k)*dx(j))/(4*area) + ... % diffusive term
+                            coefficient_functions{2}(x_G,y_G,t)*(dy(k)+dx(k)/6) + ...                    % convective term
+                            coefficient_functions{3}(x_G,y_G,t)*(area/12)*(1+isequal(j_g,k_g));          % reactive term;
                     else
                         % convert the Dirichlet pivot into natural integer
                         k_g = -k_g;
@@ -53,8 +51,8 @@ function P1solver(Nh, Nd)
                         % compute the entry of Ad for the j_g-th trial basis function and the k_g-th test basis functions
                         Ad(j_g,k_g) = Ad(j_g,k_g) + ...
                             coefficient_functions{1}(x_G,y_G,t)*(dy(k)*dy(j)+dx(k)*dx(j))/(4*area) + ... % diffusive term
-                            0 + ... % convective term
-                            0; % radiative term
+                            coefficient_functions{2}(x_G,y_G,t)*(dy(k)+dx(k)/6) + ...                    % convective term
+                            coefficient_functions{3}(x_G,y_G,t)*(area/12)*(1+isequal(j_g,k_g));          % reactive term;
                         % compute the boundary function value associated to the k_g node
                         gd(k_g) = boundary_functions{1, marker}(nodes(triangles(e,k),3), nodes(triangles(e,k),4),t);
                     end

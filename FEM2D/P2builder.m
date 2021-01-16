@@ -1,4 +1,4 @@
-function P2solver(Nh, Nd)
+function P2builder(Nh, Nd)
     
     % import time-step
     global t;
@@ -8,8 +8,6 @@ function P2solver(Nh, Nd)
     global triangles;
     global nodes;
     % initialise linear system
-    global M;
-    M = zeros(Nh, Nh);
     global A;
     A = zeros(Nh, Nh);
     global f;
@@ -59,7 +57,7 @@ function P2solver(Nh, Nd)
                     end
                 end
                 % compute the (j_g) entry of the source vector
-                f(j_g) = f(j_g) + 2*area*quad_source(j);
+                f(j_g) = f(j_g) + 2*area*quad_source(j,t);
             end
         end
     end
